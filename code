@@ -1,1 +1,23 @@
+#include <iostream>
+#include <ctime>
+using namespace std;
 
+void randomcard(int money[50],string color[50]){
+    int card = rand()%51;
+    cout<<money[card]<<" "<<color[card]<<"\n";
+}
+int main(){
+
+    int money[50]={5000,5000,5000,5000,5000,5000,5000,5000,5000,5000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,15000,15000,15000,15000,15000,15000,15000,15000,15000,15000,20000,20000,20000,20000,20000,20000,20000,20000,20000,20000,25000,25000,25000,25000,25000,25000,50000,50000,50000,50000};
+    string color[50]={"pink","pink","pink","pink","pink","pink","pink","pink","pink","pink","sky","sky","sky","sky","sky","sky","sky","sky","sky","sky","purpule","purpule","purpule","purpule","purpule","purpule","purpule","purpule","purpule","purpule","green","green","green","green","green","green","green","green","green","green","silver","silver","silver","silver","silver","silver","gold","gold","gold","gold"};
+   
+    srand(time(0));
+    
+    cout << "You have 5 cards\n";
+    for(int i=0;i<5;i++){
+        cout <<"Card "<<i+1<<" : ";
+        randomcard(money,color);
+    }
+    
+    return 0;
+}
