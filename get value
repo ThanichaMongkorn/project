@@ -1,0 +1,31 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+// ฟังก์ชันจับคู่ไพ่
+void matchingcard(vector& card, int x, int y) {
+if (card[x] == card[y]) {
+card.erase(card.begin() + y);
+card.erase(card.begin() + x);
+// เรียกฟังก์ชัน draw_card เพื่อวาดไพ่ใหม่
+draw_card();
+} else { // กรณีไพ่สองใบไม่เหมือนกัน
+// เรียกฟังก์ชัน drop_card เพื่อลดคะแนน
+drop_card();
+// เรียกฟังก์ชัน draw_card เพื่อวาดไพ่ใหม่
+draw_card();
+}
+}
+
+int main() {
+vector card = {20000, 5000, 10000, 5000, 15000};
+int x = 1;
+int y = 3;
+
+// เรียกใช้ฟังก์ชัน matchingcard เพื่อจับคู่ไพ่
+matchingcard(card, x, y);
+
+return 0;
+}
+
+//ฟังก์ชันรับค่าไพ่ที่จับคู่
