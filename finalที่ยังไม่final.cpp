@@ -1,0 +1,242 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <ctime>
+#include <algorithm>
+
+using namespace std;
+
+//สร้าง Class ไว้เก็บ cards money + color
+class Card {
+        public:
+        string color;
+        int money;
+        Card(string, int);
+
+};
+Card::Card(string c, int m )
+    {
+        color = c;
+        money = m;
+}
+
+// สร้าง Deck มาเก็บ การ์ดแต่ละใบ
+class Deck {
+        public:
+        vector<Card> cards;
+        Deck();
+        void shuffle()
+        {
+// ฟังก์ชั้นสับไพ่
+        random_shuffle(cards.begin(), cards.end());
+        }
+//ฟังกฺชั่นโชว์ไพ่
+        void ShowAllCards()
+        {
+            for (int i = 0; i < cards.size(); i++)
+            {
+            cout << cards[i].money << " " << cards[i].color << endl;
+        }
+    }
+};
+
+
+Deck::Deck() {
+// สร้างการ์ด เงิน แต่ละสี อย่างละ 10 ใบ
+        for (int i = 0; i < 10; i++) {
+        cards.push_back(Card("Pink", 5000));
+        cards.push_back(Card("Sky", 10000));
+        cards.push_back(Card("Purple", 15000));
+        cards.push_back(Card("Green", 20000));
+    }
+// สร้างการ์ดเงิน 6 ใบ
+        for (int i = 0; i < 6; i++) {
+        cards.push_back(Card("Silver", 25000));
+    } //สร้างการ์ดทอง 4 ใบ
+        for (int i = 0; i < 4; i++) {
+        cards.push_back(Card("Gold", 50000));
+    }
+}
+
+class Player {
+    public:
+    vector<Card> hand;
+    void draw(Deck &d)
+    {
+//จั่วการ์ดจาก deck ขึ้นมือ pushไพ่ใบสุดท้ายจาก deck ขึ้นมือ
+    hand.push_back(d.cards.back());
+//เอาไพ่ใบสุดท้ายจาก deck ออก
+    d.cards.pop_back();
+}
+//ฟังก์ชั่น drop card demo(ยังดรอปแบบทิ้งไปเลยอยู่)
+void drop()
+{
+    cout << "Your hand:" << endl;
+    for (int i = 0; i < hand.size() ; i++)
+    {
+        cout << "["<< i+1 <<"]" << hand[i].money << " " << hand[i].color << endl;
+    }
+    int select;
+    cout << "Select number u want to drop. 1 - " << hand.size()<< endl;
+    cin >> select;
+// เงื่อนไข ถ้า ถ้าจำนวนที่เลือกไม่ตรงกับไพ่ที่มี ไม่ให้ดรอป
+    if (select < 1 || select > hand.size())
+    {
+        cout << "incorrect please input number correctly. 1 - " << hand.size() <<endl;
+        drop();
+        return;
+    }
+//ลบไพ่บนมือใบที่เลือกออก
+    hand.erase(hand.begin() + select -1); //why -1???
+
+    }
+//ฟังก์ชั่นจับคู่การ์ด
+vector<int> match_card(int s1, int s2){
+    vector<int> mycard;
+    int z1,z2;
+        if(hand[s1-1].money==hand[s2-1].money){
+            z1 = hand[s1-1].money;
+            z2 = hand[s2-1].money;
+            hand.erase(hand.begin()+s1-1);
+            hand.erase(hand.begin()+s2-2);
+        }
+
+    mycard.push_back(z1);
+    mycard.push_back(z2);
+
+     for (int i = 0; i < hand.size() ; i++)
+    {
+        cout << "["<< i+1 <<"]" << hand[i].money << " " << hand[i].color << endl;
+        //cout << "[" << i+1 << "]" << mycard[i] << endl;
+    }
+    return mycard;
+  
+ }
+int stealCard(vector<int> mycard){
+    int a;
+    for(unsigned int i = 0; i < 5; i++){
+        if(mycard[sizeof(mycard)] == hand[i].money){
+            a = hand[i].money;
+            hand.erase(hand.begin()+i);
+        }
+    }
+    cout << a;
+    return a;
+
+}
+
+void protect(int M){
+    for(unsigned int k = 0; k < hand.size() ; k++){
+        cout << "["<< k+1 << "] " << hand[k].money<< '\n';
+    }
+    int b;
+    int choose;
+    cin >> choose;
+        
+            if(M <= hand[choose-1].money){
+                b = choose;
+                hand.erase(hand.begin()+choose-1);
+            }
+       
+
+    for(unsigned int j = 0; j < hand.size() ; j++){
+         cout << "["<< j+1 << "] "<<  hand[j].money << '\n';
+    }
+}
+};
+
+
+int main()
+{   
+    //สร้าง Deck d เพื่อเรียกใช้ class Deck
+    Deck d;
+    //สร้าง Player p1 เพื่อเรียกใช้ class player
+    Player p1;
+    srand(time(0));
+    //สับไพ่
+    d.shuffle();
+    //จั่วไพ่5ใบ
+    for (int i = 0; i < 5; i++)
+    {
+       p1.draw(d);
+       
+    }
+    //คำสั่งโชว์ไพ่ + ให้เลือก draw drop
+    while (true)
+    {
+      //โชว์ไพ่
+      cout << "Your hand:" << endl;
+      for (int i = 0; i < p1.hand.size(); i++) 
+        {
+          cout << "["<< i+1 <<"]" << p1.hand[i].money << " " << p1.hand[i].color << endl; 
+        }
+      string b;
+      //ถามว่าจะ draw ไหม
+      cout << "do you want to draw?(y or n)"<< endl;
+      cin >> b;
+      //ถ้าdraw 
+      if (b == "y")
+       {
+        p1.draw(d);
+        //ไพ่เกิน 5 ใบ ให้เลือก drop
+        if (p1.hand.size() > 5)
+        {
+            cout << "you have 6 cards drop 1 of your cards"<<endl;
+            p1.drop();
+        }
+        
+       }
+      //ถ้าไม่ draw
+      else if (b == "n")
+      {
+        //จบคำสั่ง
+        break;
+      }
+      //ถ้าใส่คำสั่งไม่ถูก
+      else
+      {
+        cout << "Please input y or n"<< endl ;
+      }
+     
+     }
+     while (true)
+     {
+        cout << "Your hand:" << endl;
+        for (int i = 0; i < p1.hand.size(); i++) 
+        {
+          cout << "["<< i+1 <<"]" << p1.hand[i].money << " " << p1.hand[i].color << endl; 
+        }
+        string c;
+        cout << "Do you want to match or steal?(m or s or e)" << endl;
+        cin >> c;
+        if(c == "m"){
+            int select1,select2;
+            cout << "please choose card that you want match ";
+            cin >> select1 >> select2;
+            p1.match_card(select1,select2);
+            if(p1.hand.size()<5){
+                p1.draw(d);
+                p1.draw(d);
+            }
+        }
+        else if(c == "s"){
+           /*int choose2;
+            cout << "please choose card that you want steal";
+            cin >> choose2;
+            p1.stealCard(vector<int> mycard);*/
+            p1.protect(5000);
+
+        }
+        else if(c=="e"){
+            break;
+            //p1.draw(d);
+            //p1.drop();
+           // p1.protect(5000);
+        }
+        else{
+            cout <<"Please choose again.\n";
+        }
+        //break;
+     }
+     
+ }
